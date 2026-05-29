@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
 from .models import Movie, User, Cart, CartItem
+from .forms import MovieForm, RegisterForm
 
 
 # =========================
@@ -14,24 +15,21 @@ def home(request):
 
 
 # =========================
-# 🔐 REGISTER
+# 🔐 REGISTER (mejorado con form)
 # =========================
 def register(request):
 
+    form = RegisterForm()
+
     if request.method == "POST":
+        form = RegisterForm(request.POST)
 
-        username = request.POST['username']
-        password = request.POST['password']
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('home')
 
-        user = User.objects.create_user(
-            username=username,
-            password=password
-        )
-
-        login(request, user)
-        return redirect('home')
-
-    return render(request, 'peliculas/register.html')
+    return render(request, 'peliculas/register.html', {'form': form})
 
 
 # =========================
@@ -75,25 +73,29 @@ def dashboard(request):
 
 
 # =========================
-# 🎬 CREATE MOVIE
+# 🎬 CREATE MOVIE (CON FORM + CATEGORIES)
 # =========================
 @login_required
 def movie_create(request):
 
+    form = MovieForm()
+
     if request.method == "POST":
 
-        Movie.objects.create(
-            title=request.POST['title'],
-            description=request.POST['description'],
-            price=request.POST['price'],
-            stock=request.POST['stock'],
-            image=request.FILES.get('image'),
-            owner=request.user
-        )
+        form = MovieForm(request.POST, request.FILES)
 
-        return redirect('dashboard')
+        if form.is_valid():
+            movie = form.save(commit=False)
+            movie.owner = request.user
+            movie.save()
 
-    return render(request, 'peliculas/movie_form.html')
+            form.save_m2m()  # 🔥 IMPORTANTÍSIMO para categories
+
+            return redirect('dashboard')
+
+    return render(request, 'peliculas/movie_form.html', {
+        'form': form
+    })
 
 
 # =========================
@@ -104,22 +106,24 @@ def movie_update(request, pk):
 
     movie = get_object_or_404(Movie, id=pk)
 
+    form = MovieForm(instance=movie)
+
     if request.method == "POST":
 
-        movie.title = request.POST['title']
-        movie.description = request.POST['description']
-        movie.price = request.POST['price']
-        movie.stock = request.POST['stock']
+        form = MovieForm(request.POST, request.FILES, instance=movie)
 
-        # si suben nueva imagen
-        if request.FILES.get('image'):
-            movie.image = request.FILES.get('image')
+        if form.is_valid():
+            movie = form.save(commit=False)
+            movie.owner = request.user
+            movie.save()
 
-        movie.save()
+            form.save_m2m()
 
-        return redirect('dashboard')
+            return redirect('dashboard')
 
-    return render(request, 'peliculas/movie_form.html', {'movie': movie})
+    return render(request, 'peliculas/movie_form.html', {
+        'form': form
+    })
 
 
 # =========================
