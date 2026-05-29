@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mis Películas</title>
+</head>
+<body>
+
+    <h1>🎬 Mis Películas</h1>
+
+    {% for movie in movies %}
+
+        <div>
+            <h2>{{ movie.title }}</h2>
+
+            <p>{{ movie.description }}</p>
+
+            <p>Precio: ${{ movie.price }}</p>
+
+            <p>Stock: {{ movie.stock }}</p>
+        </div>
+
+        <hr>
+
+    {% empty %}
+
+        <p>No hay películas disponibles</p>
+
+    {% endfor %}
+
+</body>
+</html>
