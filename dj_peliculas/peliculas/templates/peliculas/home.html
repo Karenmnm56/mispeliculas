@@ -1,32 +1,77 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Mis Películas</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-    <h1>🎬 Mis Películas</h1>
+{% block content %}
+
+<h1 class="mb-4">🎬 Películas disponibles</h1>
+
+<div class="row">
 
     {% for movie in movies %}
 
-        <div>
-            <h2>{{ movie.title }}</h2>
+        <div class="col-md-3 mb-4">
 
-            <p>{{ movie.description }}</p>
+            <div class="card shadow-sm h-100">
 
-            <p>Precio: ${{ movie.price }}</p>
+                <!-- IMAGEN -->
+                {% if movie.image %}
+                    <img src="{{ movie.image.url }}"
+                         class="card-img-top"
+                         style="height: 250px; object-fit: cover;">
+                {% else %}
+                    <div class="bg-secondary text-white d-flex align-items-center justify-content-center"
+                         style="height: 250px;">
+                        Sin imagen
+                    </div>
+                {% endif %}
 
-            <p>Stock: {{ movie.stock }}</p>
+                <div class="card-body">
+
+                    <!-- TITULO -->
+                    <h5 class="card-title">
+                        {{ movie.title }}
+                    </h5>
+
+                    <!-- DESCRIPCIÓN -->
+                    <p class="card-text text-muted">
+                        {{ movie.description|truncatechars:80 }}
+                    </p>
+
+                    <!-- PRECIO -->
+                    <p class="fw-bold">
+                        ${{ movie.price }}
+                    </p>
+
+                    <!-- STOCK -->
+                    <p>
+                        {% if movie.stock > 0 %}
+                            <span class="badge bg-success">Disponible</span>
+                        {% else %}
+                            <span class="badge bg-danger">Agotado</span>
+                        {% endif %}
+                    </p>
+
+                    <!-- BOTÓN (opcional carrito) -->
+                    <a href="{% url 'add_to_cart' movie.id %}"
+                       class="btn btn-primary w-100">
+                        🛒 Agregar al carrito
+                    </a>
+
+                </div>
+
+            </div>
+
         </div>
-
-        <hr>
 
     {% empty %}
 
-        <p>No hay películas disponibles</p>
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                No hay películas disponibles 🎬
+            </div>
+        </div>
 
     {% endfor %}
 
-</body>
-</html>
+</div>
+
+{% endblock %}

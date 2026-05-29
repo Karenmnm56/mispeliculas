@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-md-4">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <h2 class="text-center mb-4">🔐 Login</h2>
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+                    <!-- USUARIO -->
+                    <input type="text"
+                           name="username"
+                           placeholder="Usuario"
+                           class="form-control mb-3">
+
+                    <!-- CONTRASEÑA -->
+                    <input type="password"
+                           name="password"
+                           placeholder="Contraseña"
+                           class="form-control mb-3">
+
+                    <!-- BOTÓN -->
+                    <button class="btn btn-primary w-100">
+                        Ingresar
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

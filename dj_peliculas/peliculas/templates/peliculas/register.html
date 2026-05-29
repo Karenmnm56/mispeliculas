@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-md-5">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <h2 class="text-center mb-4">
+                    🧾 Registro
+                </h2>
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+                    <!-- USUARIO -->
+                    <div class="mb-3">
+                        <label>Usuario</label>
+                        <input type="text"
+                               name="username"
+                               class="form-control"
+                               placeholder="Ingresa tu usuario">
+                    </div>
+
+                    <!-- CONTRASEÑA -->
+                    <div class="mb-3">
+                        <label>Contraseña</label>
+                        <input type="password"
+                               name="password"
+                               class="form-control"
+                               placeholder="Ingresa tu contraseña">
+                    </div>
+
+                    <!-- BOTÓN -->
+                    <button class="btn btn-success w-100">
+                        Registrarse
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

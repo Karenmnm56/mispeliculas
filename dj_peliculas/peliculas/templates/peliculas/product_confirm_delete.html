@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="text-center">
+
+    <h3 class="mb-4">
+        ❌ ¿Eliminar "{{ movie.title }}"?
+    </h3>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <button class="btn btn-danger">
+            Sí, eliminar
+        </button>
+
+        <a href="{% url 'dashboard' %}"
+           class="btn btn-secondary">
+            Cancelar
+        </a>
+
+    </form>
+
+</div>
+
+{% endblock %}
